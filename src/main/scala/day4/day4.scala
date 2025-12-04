@@ -13,13 +13,10 @@ val coordinates = {
 
 def checkSurroundings(
   occupiedCells: Set[(Int, Int)],
-  rowCount: Int,
-  columnCount: Int,
 ) =
   occupiedCells.filter { case (i, j) =>
     coordinates
       .map { case (x, y) => (i + x) -> (j + y) }
-      .filterNot { case (i, j) => i < 0 || i >= rowCount || j < 0 || j >= columnCount }
       .intersect(occupiedCells)
       .size < 4
   }
@@ -45,23 +42,17 @@ def part1(): Unit =
   
   checkSurroundings(
     occupiedCells = occupiedCells,
-    rowCount = mat.size,
-    columnCount = mat.head.size
   ).size.tap(println)
 
 @tailrec
 def checkRemovable(
   occupiedCells: Set[(Int, Int)],
-  rowCount: Int,
-  columnCount: Int,
   totalCount: Int = 0
 ): Int =
-  val removable = checkSurroundings(occupiedCells, rowCount, columnCount)
+  val removable = checkSurroundings(occupiedCells)
   if removable.nonEmpty then
     checkRemovable(
       occupiedCells.diff(removable),
-      rowCount,
-      columnCount,
       totalCount + removable.size
     )
   else
@@ -88,8 +79,6 @@ def part2(): Unit =
 
   checkRemovable(
     occupiedCells = occupiedCells,
-    rowCount = mat.size,
-    columnCount = mat.head.size
   ).tap(println)
 
 @main
